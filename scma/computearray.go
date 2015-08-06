@@ -32,11 +32,11 @@ func NewComputeArray(elements int) *ComputeArray {
 
 	for i := 0; i < elements; i++ {
 		element := computeElement{rank: i,
-                              data: nil,
-                              clockLine: arr.clockLines[i],
-                              dataLineEast: arr.commsLines[i],
-                              dataLineWest: arr.commsLines[(i+1)%elements]}
-    arr.elements[i] = element
+			data:         nil,
+			clockLine:    arr.clockLines[i],
+			dataLineEast: arr.commsLines[i],
+			dataLineWest: arr.commsLines[(i+1)%elements]}
+		arr.elements[i] = element
 	}
 	return arr
 }
