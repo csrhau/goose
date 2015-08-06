@@ -25,3 +25,11 @@ func TestContiguousElements(t *testing.T) {
 		}
 	}
 }
+
+func TestAddingData(t *testing.T) {
+
+}
+
+func TestDrainingData(t *testing.T) {
+
+}
