@@ -91,7 +91,6 @@ func NewComputeArray(elements, cellsX, cellsY int) *ComputeArray {
 			elDat[i] = make([]float64, arr.cellsY)
 		}
 		element := computeElement{
-			rank:      i,
 			data:      elDat,
 			clockLine: arr.clockLines[i],
 			inBus:     arr.commsLines[i],

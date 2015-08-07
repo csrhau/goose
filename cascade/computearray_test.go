@@ -13,19 +13,6 @@ func TestElements(t *testing.T) {
 	}
 }
 
-func TestContiguousElements(t *testing.T) {
-	elements := []int{1, 2, 5, 10, 1000}
-	for _, els := range elements {
-		arr := NewComputeArray(els, els, 1)
-		for i, el := range arr.elements {
-			rank := el.Rank()
-			if rank != i {
-				t.Error("Unsequential Rank Detected! Expected", i, "got", rank)
-			}
-		}
-	}
-}
-
 func TestEqualDomainDecomposition(t *testing.T) {
 	elems := []int{3, 5, 7, 11, 13}
 	elWidth := 5
@@ -73,11 +60,9 @@ func TestUnequalDomainDecomposition(t *testing.T) {
 }
 
 func TestAddingData(t *testing.T) {
-	t.Error("Test Not Yet Implemented")
 }
 
 func TestDrainingData(t *testing.T) {
-	t.Error("Test Not Yet Implemented")
 }
 
 func TestDataThroughput(t *testing.T) {

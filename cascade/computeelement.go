@@ -3,7 +3,6 @@ package cascade
 // computeElement represents an elent within a cascade or other array-based
 // computing machine
 type computeElement struct {
-	rank      int
 	data      [][]float64
 	clockLine chan bool
 	inBus     chan []float64
@@ -32,14 +31,17 @@ func (el *computeElement) OutBus() <-chan []float64 {
 	return el.outBus
 }
 
-// Rank returns the rank of the ComputeElement within an array
-func (el *computeElement) Rank() int {
-	return el.rank
-}
-
 func (el *computeElement) communicate() {
 	outbound, remainder := el.data[0], el.data[1:]
 	go func() { el.outBus <- outbound }()
 	inbound := <-el.inBus
 	el.data = append(remainder, inbound)
+}
+
+func NewComputeElement(x, y int, cl chan bool, ib, ob chan []float64) computeElement {
+	data := make([][]float64, x)
+	for i := 0; i < x; i++ {
+		data[i] = make([]float64, y)
+	}
+	return computeElement{data, cl, ib, ob}
 }
