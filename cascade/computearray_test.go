@@ -5,10 +5,10 @@ import "testing"
 func TestElements(t *testing.T) {
 	elements := []int{1, 2, 5, 10, 1000}
 	for _, els := range elements {
-		cascade := NewComputeArray(els, els, 1)
-		cascadeSize := cascade.Elements()
-		if cascadeSize != els {
-			t.Error("Expected Elements()", els, "got", cascadeSize)
+		arr := NewComputeArray(els, els, 1)
+		arrSize := arr.Elements()
+		if arrSize != els {
+			t.Error("Expected Elements()", els, "got", arrSize)
 		}
 	}
 }
@@ -16,8 +16,8 @@ func TestElements(t *testing.T) {
 func TestContiguousElements(t *testing.T) {
 	elements := []int{1, 2, 5, 10, 1000}
 	for _, els := range elements {
-		cascade := NewComputeArray(els, els, 1)
-		for i, el := range cascade.elements {
+		arr := NewComputeArray(els, els, 1)
+		for i, el := range arr.elements {
 			rank := el.Rank()
 			if rank != i {
 				t.Error("Unsequential Rank Detected! Expected", i, "got", rank)
@@ -31,8 +31,8 @@ func TestEqualDomainDecomposition(t *testing.T) {
 	elWidth := 5
 	elHeight := 10
 	for _, els := range elems {
-		cascade := NewComputeArray(els, els*elWidth, elHeight)
-		for _, el := range cascade.elements {
+		arr := NewComputeArray(els, els*elWidth, elHeight)
+		for _, el := range arr.elements {
 			if el.FixedDimCells() != elHeight {
 				t.Error("Mismatched fixed dimension, expected", elHeight, "got", el.FixedDimCells())
 			}
@@ -49,9 +49,9 @@ func TestUnequalDomainDecomposition(t *testing.T) {
 	elHeight := 10
 	for _, els := range elems {
 		for _, cells := range cells {
-			cascade := NewComputeArray(els, cells, elHeight)
+			arr := NewComputeArray(els, cells, elHeight)
 			cellCount := 0
-			for i, el := range cascade.elements {
+			for i, el := range arr.elements {
 				var expectedCells int
 				// Slightly weird formulation because we back-load the cells
 				if (els - i - 1) < cells%els {
@@ -78,4 +78,8 @@ func TestAddingData(t *testing.T) {
 
 func TestDrainingData(t *testing.T) {
 	t.Error("Test Not Yet Implemented")
+}
+
+func TestDataThroughput(t *testing.T) {
+
 }
