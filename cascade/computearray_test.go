@@ -1,35 +1,81 @@
-package scma
+package cascade
 
 import "testing"
 
 func TestElements(t *testing.T) {
-	sizes := []int{1, 2, 5, 10, 1000}
-	for _, size := range sizes {
-		scma := NewComputeArray(size)
-		scmaSize := scma.Elements()
-		if scmaSize != size {
-			t.Error("Expected Elements() ", size, ", got ", scmaSize)
+	elements := []int{1, 2, 5, 10, 1000}
+	for _, els := range elements {
+		cascade := NewComputeArray(els, els, 1)
+		cascadeSize := cascade.Elements()
+		if cascadeSize != els {
+			t.Error("Expected Elements()", els, "got", cascadeSize)
 		}
 	}
 }
 
 func TestContiguousElements(t *testing.T) {
-	sizes := []int{1, 2, 5, 10, 1000}
-	for _, size := range sizes {
-		scma := NewComputeArray(size)
-		for i := 0; i < size; i++ {
-			rank := scma.elements[i].Rank()
+	elements := []int{1, 2, 5, 10, 1000}
+	for _, els := range elements {
+		cascade := NewComputeArray(els, els, 1)
+		for i, el := range cascade.elements {
+			rank := el.Rank()
 			if rank != i {
-				t.Error("Unsequential Rank Detected! Expected ", i, " got ", rank)
+				t.Error("Unsequential Rank Detected! Expected", i, "got", rank)
+			}
+		}
+	}
+}
+
+func TestEqualDomainDecomposition(t *testing.T) {
+	elems := []int{3, 5, 7, 11, 13}
+	elWidth := 5
+	elHeight := 10
+	for _, els := range elems {
+		cascade := NewComputeArray(els, els*elWidth, elHeight)
+		for _, el := range cascade.elements {
+			if el.FixedDimCells() != elHeight {
+				t.Error("Mismatched fixed dimension, expected", elHeight, "got", el.FixedDimCells())
+			}
+			if el.TransDimCells() != elWidth {
+				t.Error("Mismatched trans dimension, expected", elWidth, "got", el.TransDimCells())
+			}
+		}
+	}
+}
+
+func TestUnequalDomainDecomposition(t *testing.T) {
+	elems := []int{3, 5, 7, 11, 13}
+	cells := []int{101, 103, 107, 109, 113, 127}
+	elHeight := 10
+	for _, els := range elems {
+		for _, cells := range cells {
+			cascade := NewComputeArray(els, cells, elHeight)
+			cellCount := 0
+			for i, el := range cascade.elements {
+				var expectedCells int
+				// Slightly weird formulation because we back-load the cells
+				if (els - i - 1) < cells%els {
+					expectedCells = 1 + cells/els
+				} else {
+					expectedCells = cells / els
+				}
+				obsCells := el.TransDimCells()
+				if obsCells != expectedCells {
+					t.Error("Cell count mismatch for element", i, "expected", expectedCells, "got", obsCells)
+				}
+				cellCount += el.TransDimCells()
+			}
+			if cellCount != cells {
+				t.Error("Conservation of cells violated! Expected", cells, "got", cellCount)
 			}
 		}
 	}
 }
 
 func TestAddingData(t *testing.T) {
-
+	t.Error("Test Not Yet Implemented")
 }
 
 func TestDrainingData(t *testing.T) {
-
+	t.Error("Test Not Yet Implemented")
 }

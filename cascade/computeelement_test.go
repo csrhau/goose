@@ -1,4 +1,4 @@
-package scma
+package cascade
 
 import "testing"
 
@@ -8,7 +8,7 @@ func TestRank(t *testing.T) {
 		elem := computeElement{rank, nil, nil, nil, nil}
 		elemRank := elem.Rank()
 		if elemRank != rank {
-			t.Error("Expected Rank() ", rank, " got ", elemRank)
+			t.Error("Expected Rank()", rank, "got", elemRank)
 		}
 	}
 }
@@ -30,11 +30,11 @@ func TestCommunicatePresevesInternalData(t *testing.T) {
 		expected := data[i]
 		lo, le := len(observed), len(expected)
 		if lo != le {
-			t.Error("Length of expected (", lo, ") and received (", le, ") differ!")
+			t.Error("Length of expected", lo, "and received", le, "differ!")
 		} else {
 			for i, e := range expected {
 				if observed[i] != e { // intentionally checking bitwise equality
-					t.Error("Communications Mismatch! Expected ", e, ", got ", observed[i])
+					t.Error("Communications Mismatch! Expected", e, "got", observed[i])
 				}
 			}
 		}
@@ -80,7 +80,7 @@ func TestCommunicationPassthrough(t *testing.T) {
 		for j, v := range rcv {
 			e := payload[i][j]
 			if e != v {
-				t.Error("Communications Mismatch! Expected ", e, ", got ", v)
+				t.Error("Communications Mismatch! Expected", e, "got", v)
 			}
 		}
 	}

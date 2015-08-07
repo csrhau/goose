@@ -1,6 +1,6 @@
-package scma
+package cascade
 
-// computeElement represents an elent within a SCMA or other array-based
+// computeElement represents an elent within a cascade or other array-based
 // computing machine
 type computeElement struct {
 	rank      int
@@ -8,6 +8,18 @@ type computeElement struct {
 	clockLine chan bool
 	inBus     chan []float64
 	outBus    chan []float64
+}
+
+// FixedDimCells returns the number of cells along the fixed axis
+// orthogonal to the translating axis. This corresponds to the length
+// of the slices which will be transmitted.
+func (el *computeElement) FixedDimCells() int {
+	return len(el.data[0])
+}
+
+// TransDimCells returns the number of cells along the translating axis
+func (el *computeElement) TransDimCells() int {
+	return len(el.data)
 }
 
 // InBus returns the input data channel for this element
