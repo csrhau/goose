@@ -16,7 +16,7 @@ const (
 // ComputeArray models an cascade or other array based computing machine
 type ComputeArray struct {
 	phase          Phase
-	elements       []computeElement
+	elements       []ComputeElement
 	cellsX, cellsY int
 	inlet          chan []float64
 	outlet         chan []float64
@@ -44,7 +44,7 @@ func (arr *ComputeArray) CellsY() int {
 	return arr.cellsY
 }
 
-// Tick sends a clock pulse to all computeElements in this array
+// Tick sends a clock pulse to all ComputeElements in this array
 func (arr *ComputeArray) Tick() {
 	for _, line := range arr.clockLines {
 		line <- true
@@ -65,7 +65,7 @@ func (arr *ComputeArray) Outlet() <-chan []float64 {
 func NewComputeArray(elements, cellsX, cellsY int) *ComputeArray {
 	arr := new(ComputeArray)
 	arr.phase = Halt
-	arr.elements = make([]computeElement, elements)
+	arr.elements = make([]ComputeElement, elements)
 	arr.cellsX, arr.cellsY = cellsX, cellsY
 	arr.inlet = make(chan []float64)
 	arr.outlet = make(chan []float64)
@@ -90,7 +90,7 @@ func NewComputeArray(elements, cellsX, cellsY int) *ComputeArray {
 		for i := 0; i < len(elDat); i++ {
 			elDat[i] = make([]float64, arr.cellsY)
 		}
-		element := computeElement{
+		element := ComputeElement{
 			data:      elDat,
 			clockLine: arr.clockLines[i],
 			inBus:     arr.commsLines[i],
