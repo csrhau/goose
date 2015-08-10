@@ -1,4 +1,4 @@
-package cascade
+package goose
 
 import "testing"
 

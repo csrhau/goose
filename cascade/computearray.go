@@ -1,11 +1,11 @@
-package cascade
+package goose
 
 // ComputeArray represents a cascade or other array-based computing machine
 
-// Phase represents the computational state of a ComputeElement
+// Phase represents the computational state of a CascadeElement
 type Phase int
 
-// These constants represent the possible states of a ComputeElement
+// These constants represent the possible states of a CascadeElement
 const (
 	Halt Phase = iota
 	Fill
@@ -16,7 +16,7 @@ const (
 // ComputeArray models an cascade or other array based computing machine
 type ComputeArray struct {
 	phase          Phase
-	elements       []ComputeElement
+	elements       []CascadeElement
 	cellsX, cellsY int
 	inlet          chan []float64
 	outlet         chan []float64
@@ -29,7 +29,7 @@ func (arr *ComputeArray) Phase() Phase {
 	return arr.phase
 }
 
-// Elements returns the number of ComputeElements in this array
+// Elements returns the number of CascadeElements in this array
 func (arr *ComputeArray) Elements() int {
 	return len(arr.elements)
 }
@@ -44,7 +44,7 @@ func (arr *ComputeArray) CellsY() int {
 	return arr.cellsY
 }
 
-// Tick sends a clock pulse to all ComputeElements in this array
+// Tick sends a clock pulse to all CascadeElements in this array
 func (arr *ComputeArray) Tick() {
 	for _, line := range arr.clockLines {
 		line <- true
@@ -65,7 +65,7 @@ func (arr *ComputeArray) Outlet() <-chan []float64 {
 func NewComputeArray(elements, cellsX, cellsY int) *ComputeArray {
 	arr := new(ComputeArray)
 	arr.phase = Halt
-	arr.elements = make([]ComputeElement, elements)
+	arr.elements = make([]CascadeElement, elements)
 	arr.cellsX, arr.cellsY = cellsX, cellsY
 	arr.inlet = make(chan []float64)
 	arr.outlet = make(chan []float64)
@@ -90,7 +90,7 @@ func NewComputeArray(elements, cellsX, cellsY int) *ComputeArray {
 		for i := 0; i < len(elDat); i++ {
 			elDat[i] = make([]float64, arr.cellsY)
 		}
-		element := ComputeElement{
+		element := CascadeElement{
 			data:      elDat,
 			clockLine: arr.clockLines[i],
 			inBus:     arr.commsLines[i],

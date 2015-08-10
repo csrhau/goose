@@ -1,4 +1,4 @@
-package cascade
+package goose
 
 import "testing"
 
@@ -10,7 +10,7 @@ func TestCommunicationPassthrough(t *testing.T) {
 	}
 	upstream := make(chan []float64)
 	downstream := make(chan []float64)
-	elem := NewComputeElement(3, 3, nil, upstream, downstream)
+	elem := NewCascadeElement(3, 3, nil, upstream, downstream)
 
 	payload := [][]float64{
 		[]float64{1.0, 2.0, 3.0},
