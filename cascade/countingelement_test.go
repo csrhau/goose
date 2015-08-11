@@ -7,7 +7,7 @@ func TestCountingElementCycles(t *testing.T) {
 	c := make(chan bool)
 	d := make([][]float64, 0)
 	el := CountingElement{0, c, d}
-	go el.Operate()
+	go el.Step()
 	for i := 0; i < testCycles; i++ {
 		c <- true
 	}
