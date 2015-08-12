@@ -21,3 +21,9 @@ func (arr *ComputeArray) Step() {
 	}
 	wg.Wait()
 }
+
+func (arr *ComputeArray) Run(clk <-chan bool) {
+	for range clk {
+		arr.Step()
+	}
+}
