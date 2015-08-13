@@ -2,6 +2,12 @@ package goose
 
 import "testing"
 
+func RowSwapElementIsAComputeElement(t *testing.T) {
+	var el ComputeElement
+	el = new(RowSwapElement)
+	_ = el
+}
+
 func TestRowSwapElementSwapsRows(t *testing.T) {
 	northIn := make(chan []float64)
 	northOut := make(chan []float64)
@@ -49,10 +55,10 @@ func TestRowSwapElementSwapsRows(t *testing.T) {
 	}
 }
 
-func TestRowSwapElementInArray(t *testing.T) {
-	const els = 42
-	const elRows = 5
-	const elCols = 1000
+func TestRowSwapElementInArrayManualConstruction(t *testing.T) {
+	const els = 3
+	const elRows = 3
+	const elCols = 3
 	elems := make([]ComputeElement, els)
 	upChans := make([]chan []float64, els)
 	downChans := make([]chan []float64, els)
@@ -80,13 +86,63 @@ func TestRowSwapElementInArray(t *testing.T) {
 		}
 		elems[i] = &elem
 	}
-	ar := new(ComputeArray)
-	ar.elements = elems
-
-	const testIters = 10
-
-	for i := 0; i < 10; i++ {
-		ar.Step()
-
+	arr := new(ComputeArray)
+	arr.elements = elems
+	for s := 0; s < 2; s++ {
+		// Expect Contiguous numbers
+		for i, e := range arr.elements {
+			for j := 0; j < elRows; j++ {
+				for k := 0; k < elCols; k++ {
+					if e.Data()[j][k] != float64(i) {
+						t.Error("Mismatched data on unshuffled step")
+					}
+				}
+			}
+		}
+		arr.Step()
+		// Expect Mixed numbers
+		for i, e := range arr.elements {
+			// Top Row from prev. element
+			for k := 0; k < elCols; k++ {
+				prev, next := i-1, i+1
+				if prev < 0 {
+					prev = els - 1
+				}
+				if next > els-1 {
+					next = 0
+				}
+				// Top Row from prev. elements
+				if e.Data()[0][k] != float64(prev) {
+					t.Error("Mismatch data on top row of shuffled step")
+				}
+				// Middle row - unshuffled
+				if e.Data()[1][k] != float64(i) {
+					t.Error("Mismatch data on middle row of shuffled step")
+				}
+				// Bottom Row from next element
+				if e.Data()[2][k] != float64(next) {
+					t.Error("Mismatch data on bottom row of shuffled step")
+				}
+			}
+		}
+		arr.Step()
 	}
+}
+
+func TestRowSwapElementInArrayMakeConstruction(t *testing.T) {
+	const els = 3
+	const elRows = 3
+	const elCols = 3
+	arr := MakeRowSwapArray(els, elRows, elCols)
+	// Expect Contiguous numbers
+	for i, e := range arr.elements {
+		for j := 0; j < elRows; j++ {
+			for k := 0; k < elCols; k++ {
+				if e.Data()[j][k] != float64(i) {
+					t.Error("Mismatched data on unshuffled step")
+				}
+			}
+		}
+	}
+	arr.Step()
 }

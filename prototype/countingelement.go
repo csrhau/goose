@@ -13,7 +13,7 @@ func (el *CountingElement) Data() [][]float64 {
 func (el *CountingElement) Step() {
 	el.iterations++
 	for _, r := range el.data {
-		for i, _ := range r {
+		for i := range r {
 			r[i] = float64(el.iterations)
 		}
 	}

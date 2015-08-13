@@ -14,10 +14,10 @@ func (arr *ComputeArray) Step() {
 	var wg sync.WaitGroup
 	wg.Add(len(arr.Elements()))
 	for _, el := range arr.Elements() {
-		go func() {
+		go func(el ComputeElement) {
 			defer wg.Done()
 			el.Step()
-		}()
+		}(el)
 	}
 	wg.Wait()
 }
