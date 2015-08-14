@@ -38,18 +38,19 @@ func TestRowSwapElementSwapsRows(t *testing.T) {
 	// Run an iteration of the element logic
 	go el.Step()
 
+	// See what comes out
 	for i := 0; i < 2; i++ {
 		select {
 		case no := <-northOut:
 			for i, v := range no {
 				if v != initData[1][i] {
-					t.Error("mismatch in received data! expected", v, "got", initData[0][i])
+					t.Error("mismatch in received data! got", v, "expected", initData[0][i])
 				}
 			}
 		case so := <-southOut:
 			for i, v := range so {
 				if v != initData[2][i] {
-					t.Error("mismatch in received data! expected", v, "got", initData[2][i])
+					t.Error("mismatch in received data! got", v, "expected", initData[2][i])
 				}
 			}
 		}
