@@ -144,5 +144,48 @@ func TestRowSwapElementInArrayMakeConstruction(t *testing.T) {
 			}
 		}
 	}
+	// Expect Contiguous numbers
+	for i, e := range arr.elements {
+		for j := 0; j < elRows; j++ {
+			for k := 0; k < elCols; k++ {
+				if e.Data()[j][k] != float64(i) {
+					t.Error("Mismatched data on unshuffled step")
+				}
+			}
+		}
+	}
 	arr.Step()
+	// Expect Mixed numbers
+	for i, e := range arr.elements {
+		// Top Row from prev. element
+		for k := 0; k < elCols; k++ {
+			prev, next := i-1, i+1
+			if prev < 0 {
+				prev = els - 1
+			}
+			if next > els-1 {
+				next = 0
+			}
+			// Top Row from prev. elements
+			if e.Data()[0][k] != float64(prev) {
+				t.Error("Mismatch data on top row of shuffled step")
+			}
+			// Middle row - unshuffled
+			if e.Data()[1][k] != float64(i) {
+				t.Error("Mismatch data on middle row of shuffled step")
+			}
+			// Bottom Row from next element
+			if e.Data()[2][k] != float64(next) {
+				t.Error("Mismatch data on bottom row of shuffled step")
+			}
+		}
+	}
+	arr.Step()
+}
+
+func BenchmarkRowswap(b *testing.B) {
+	arr := MakeRowSwapArray(100, 4, 1000)
+	for i := 0; i < b.N; i++ {
+		arr.Step()
+	}
 }
