@@ -192,7 +192,7 @@ func TestRowSwapElementInArrayMakeConstruction(t *testing.T) {
 	}
 }
 
-func BenchmarkRowswap(b *testing.B) {
+func BenchmarkRowSwap(b *testing.B) {
 	arr := MakeRowSwapArray(10000, 4, 100)
 	for i := 0; i < b.N; i++ {
 		arr.Step()
