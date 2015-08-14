@@ -17,9 +17,10 @@ func TestRowSwapElementSwapsRows(t *testing.T) {
 		[]float64{1.1, 1.2, 1.3},
 		[]float64{2.1, 2.2, 2.3},
 		[]float64{3.1, 3.2, 3.3},
+		[]float64{4.1, 4.2, 4.3},
 	}
 	ni := []float64{0.1, 0.2, 0.3}
-	si := []float64{4.1, 4.2, 4.3}
+	si := []float64{5.1, 5.2, 5.3}
 
 	el := new(RowSwapElement)
 	el.data = initData
@@ -41,7 +42,7 @@ func TestRowSwapElementSwapsRows(t *testing.T) {
 		select {
 		case no := <-northOut:
 			for i, v := range no {
-				if v != initData[0][i] {
+				if v != initData[1][i] {
 					t.Error("mismatch in received data! expected", v, "got", initData[0][i])
 				}
 			}
@@ -57,8 +58,8 @@ func TestRowSwapElementSwapsRows(t *testing.T) {
 
 func TestRowSwapElementInArrayManualConstruction(t *testing.T) {
 	const els = 3
-	const elRows = 3
-	const elCols = 3
+	const elRows = 4
+	const elCols = 4
 	elems := make([]ComputeElement, els)
 	upChans := make([]chan []float64, els)
 	downChans := make([]chan []float64, els)
@@ -88,44 +89,52 @@ func TestRowSwapElementInArrayManualConstruction(t *testing.T) {
 	}
 	arr := new(ComputeArray)
 	arr.elements = elems
+
+	// Check Initialization
+	for i, e := range arr.elements {
+		for j := 0; j < elRows; j++ {
+			for k := 0; k < elCols; k++ {
+				if e.Data()[j][k] != float64(i) {
+					t.Error("Mismatched data on Initialization of node", i, e.Data())
+				}
+			}
+		}
+	}
+
 	for s := 0; s < 2; s++ {
-		// Expect Contiguous numbers
+		arr.Step()
 		for i, e := range arr.elements {
-			for j := 0; j < elRows; j++ {
+			next, prev := i+1, i-1
+			if next > els-1 {
+				next = 0
+			}
+			if prev < 0 {
+				prev = els - 1
+			}
+
+			// Top Row comes from prev
+			for k := 0; k < elCols; k++ {
+				if e.Data()[0][k] != float64(prev) {
+					t.Error("Mismatched data received from previous node")
+				}
+			}
+
+			// Inner rows stay the same
+			for j := 1; j < elRows-1; j++ {
 				for k := 0; k < elCols; k++ {
 					if e.Data()[j][k] != float64(i) {
-						t.Error("Mismatched data on unshuffled step")
+						t.Error("Mismatched data in internal slice!")
 					}
 				}
 			}
-		}
-		arr.Step()
-		// Expect Mixed numbers
-		for i, e := range arr.elements {
-			// Top Row from prev. element
+
+			// Bottom Row  comes from next
 			for k := 0; k < elCols; k++ {
-				prev, next := i-1, i+1
-				if prev < 0 {
-					prev = els - 1
-				}
-				if next > els-1 {
-					next = 0
-				}
-				// Top Row from prev. elements
-				if e.Data()[0][k] != float64(prev) {
-					t.Error("Mismatch data on top row of shuffled step")
-				}
-				// Middle row - unshuffled
-				if e.Data()[1][k] != float64(i) {
-					t.Error("Mismatch data on middle row of shuffled step")
-				}
-				// Bottom Row from next element
-				if e.Data()[2][k] != float64(next) {
-					t.Error("Mismatch data on bottom row of shuffled step")
+				if e.Data()[elRows-1][k] != float64(next) {
+					t.Error("Mismatched data received from next node")
 				}
 			}
 		}
-		arr.Step()
 	}
 }
 
@@ -154,37 +163,37 @@ func TestRowSwapElementInArrayMakeConstruction(t *testing.T) {
 			}
 		}
 	}
-	arr.Step()
-	// Expect Mixed numbers
-	for i, e := range arr.elements {
-		// Top Row from prev. element
-		for k := 0; k < elCols; k++ {
-			prev, next := i-1, i+1
-			if prev < 0 {
-				prev = els - 1
-			}
-			if next > els-1 {
-				next = 0
-			}
-			// Top Row from prev. elements
-			if e.Data()[0][k] != float64(prev) {
-				t.Error("Mismatch data on top row of shuffled step")
-			}
-			// Middle row - unshuffled
-			if e.Data()[1][k] != float64(i) {
-				t.Error("Mismatch data on middle row of shuffled step")
-			}
-			// Bottom Row from next element
-			if e.Data()[2][k] != float64(next) {
-				t.Error("Mismatch data on bottom row of shuffled step")
+	for s := 0; s < 10; s++ {
+		arr.Step()
+		for i, e := range arr.elements {
+			// Top Row from prev. element
+			for k := 0; k < elCols; k++ {
+				prev, next := i-1, i+1
+				if prev < 0 {
+					prev = els - 1
+				}
+				if next > els-1 {
+					next = 0
+				}
+				// Top Row from prev. elements
+				if e.Data()[0][k] != float64(prev) {
+					t.Error("Mismatch data on top row of shuffled step")
+				}
+				// Middle row - unshuffled
+				if e.Data()[1][k] != float64(i) {
+					t.Error("Mismatch data on middle row of shuffled step")
+				}
+				// Bottom Row from next element
+				if e.Data()[2][k] != float64(next) {
+					t.Error("Mismatch data on bottom row of shuffled step")
+				}
 			}
 		}
 	}
-	arr.Step()
 }
 
 func BenchmarkRowswap(b *testing.B) {
-	arr := MakeRowSwapArray(100, 4, 1000)
+	arr := MakeRowSwapArray(10000, 4, 100)
 	for i := 0; i < b.N; i++ {
 		arr.Step()
 	}

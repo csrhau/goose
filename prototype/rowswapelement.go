@@ -12,24 +12,14 @@ func (el *RowSwapElement) Data() [][]float64 {
 }
 
 func (el *RowSwapElement) Swap() {
-	sent := make(chan struct{})
-	// Send - TODO benchmark with select
+	// Send
 	go func() {
-		el.northOut <- el.data[0]
-		el.southOut <- el.data[len(el.data)-1]
-		close(sent)
-
+		el.northOut <- el.data[1]
+		el.southOut <- el.data[len(el.data)-2]
 	}()
-
-	var northRecv, southRecv []float64
-	// Receive - TODO benchmark without select, just reversed ordering
-	southRecv = <-el.southIn
-	northRecv = <-el.northIn
-	// Wait until we have sent out current border data
-	<-sent
-	// Update
-	el.data[0] = northRecv
-	el.data[len(el.data)-1] = southRecv
+	// Receive
+	el.data[len(el.data)-1] = <-el.southIn
+	el.data[0] = <-el.northIn
 }
 
 func (el *RowSwapElement) Step() {
