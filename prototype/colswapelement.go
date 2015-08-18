@@ -50,18 +50,18 @@ func MakeColSwapArray(els, elRows, elCols int) ComputeArray {
 				data[j][k] = float64(i)
 			}
 		}
-		rse := new(ColSwapElement)
-		rse.rows = elRows
-		rse.cols = elCols
-		rse.data = data
-		rse.westIn, rse.westOut = lastRight, lastLeft
+		cse := new(ColSwapElement)
+		cse.rows = elRows
+		cse.cols = elCols
+		cse.data = data
+		cse.westIn, cse.westOut = lastRight, lastLeft
 		if i < els-1 {
-			rse.eastIn, rse.eastOut = make(chan []float64), make(chan []float64)
+			cse.eastIn, cse.eastOut = make(chan []float64), make(chan []float64)
 		} else {
-			rse.eastIn, rse.eastOut = firstLeft, firstRight
+			cse.eastIn, cse.eastOut = firstLeft, firstRight
 		}
-		lastRight, lastLeft = rse.eastOut, rse.eastIn
-		elems[i] = rse
+		lastRight, lastLeft = cse.eastOut, cse.eastIn
+		elems[i] = cse
 	}
 	return ComputeArray{elements: elems}
 }
