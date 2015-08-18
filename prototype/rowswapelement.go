@@ -7,10 +7,12 @@ type RowSwapElement struct {
 	southIn, southOut chan []float64
 }
 
+// Data returns the data stored by this element
 func (el *RowSwapElement) Data() [][]float64 {
 	return el.data
 }
 
+// Swap causes this element to exchange data with its neighbours
 func (el *RowSwapElement) Swap() {
 	// Send
 	go func() {
@@ -22,10 +24,12 @@ func (el *RowSwapElement) Swap() {
 	el.data[0] = <-el.northIn
 }
 
+// Step causes this element to advance by one step
 func (el *RowSwapElement) Step() {
 	el.Swap()
 }
 
+// MakeRowSwapArray constructs a ComputeArray populated by RowSwapElements
 func MakeRowSwapArray(els, elRows, elCols int) ComputeArray {
 	elems := make([]ComputeElement, els)
 	topDown, topUp := make(chan []float64), make(chan []float64)

@@ -8,10 +8,12 @@ type ColSwapElement struct {
 	eastIn, eastOut chan []float64
 }
 
+// Data returns the data stored by this element
 func (el *ColSwapElement) Data() [][]float64 {
 	return el.data
 }
 
+// Swap causes this element to exchange data with its neighbours
 func (el *ColSwapElement) Swap() {
 	// Send
 	go func() {
@@ -34,10 +36,12 @@ func (el *ColSwapElement) Swap() {
 	}
 }
 
+// Step causes this element to advance by one step
 func (el *ColSwapElement) Step() {
 	el.Swap()
 }
 
+// MakeColSwapArray constructs a ComputeArray populated by ColSwapElements
 func MakeColSwapArray(els, elRows, elCols int) ComputeArray {
 	elems := make([]ComputeElement, els)
 	firstRight, firstLeft := make(chan []float64), make(chan []float64)
