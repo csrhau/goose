@@ -44,6 +44,9 @@ func TestColSwapElementSwapsCols(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		select {
 		case wo := <-westOut:
+			if len(wo) != 4 {
+				t.Error("Received", len(wo), "elements from wo, expected 4")
+			}
 			for i, v := range wo {
 				if v != initData[i][1] {
 					t.Error("mismatch in west received data! got", v, "expected", initData[i][1])
@@ -51,6 +54,9 @@ func TestColSwapElementSwapsCols(t *testing.T) {
 				}
 			}
 		case eo := <-eastOut:
+			if len(eo) != 4 {
+				t.Error("Received", len(eo), "elements from eo, expected 4")
+			}
 			for i, v := range eo {
 				if v != initData[i][2] {
 					t.Error("mismatch in received data! got", v, "expected", initData[i][2])
@@ -117,7 +123,7 @@ func TestColSwapElementInArrayMakeConstruction(t *testing.T) {
 }
 
 func BenchmarkColSwap(b *testing.B) {
-	arr := MakeColSwapArray(10000, 100, 10)
+	arr := MakeColSwapArray(25*25, 100, 100)
 	for i := 0; i < b.N; i++ {
 		arr.Step()
 	}

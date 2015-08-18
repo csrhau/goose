@@ -42,7 +42,7 @@ func (el *ColSwapElement) Step() {
 }
 
 // MakeColSwapArray constructs a ComputeArray populated by ColSwapElements
-func MakeColSwapArray(els, elRows, elCols int) ComputeArray {
+func MakeColSwapArray(els, elRows, elCols int) *ComputeArray {
 	elems := make([]ComputeElement, els)
 	firstRight, firstLeft := make(chan []float64), make(chan []float64)
 	lastLeft, lastRight := firstLeft, firstRight
@@ -67,5 +67,5 @@ func MakeColSwapArray(els, elRows, elCols int) ComputeArray {
 		lastRight, lastLeft = cse.eastOut, cse.eastIn
 		elems[i] = cse
 	}
-	return ComputeArray{elements: elems}
+	return &ComputeArray{elements: elems}
 }

@@ -42,12 +42,18 @@ func TestRowSwapElementSwapsRows(t *testing.T) {
 	for i := 0; i < 2; i++ {
 		select {
 		case no := <-northOut:
+			if len(no) != len(ni) {
+				t.Error("Received", len(no), "elements from no, expected", len(ni))
+			}
 			for i, v := range no {
 				if v != initData[1][i] {
 					t.Error("mismatch in received data! got", v, "expected", initData[0][i])
 				}
 			}
 		case so := <-southOut:
+			if len(so) != len(si) {
+				t.Error("Received", len(so), "elements from so, expected", len(si))
+			}
 			for i, v := range so {
 				if v != initData[2][i] {
 					t.Error("mismatch in received data! got", v, "expected", initData[2][i])
@@ -194,7 +200,7 @@ func TestRowSwapElementInArrayMakeConstruction(t *testing.T) {
 }
 
 func BenchmarkRowSwap(b *testing.B) {
-	arr := MakeRowSwapArray(10000, 4, 100)
+	arr := MakeRowSwapArray(25*25, 100, 100)
 	for i := 0; i < b.N; i++ {
 		arr.Step()
 	}
