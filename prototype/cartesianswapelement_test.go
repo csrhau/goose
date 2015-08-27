@@ -44,10 +44,10 @@ func TestCartesianSwapElementSwapsCols(t *testing.T) {
 
 	// Make sure there is something waiting to be swapped
 	go func() {
-		northIn <- ni
-		westIn <- wi
 		southIn <- si
+		northIn <- ni
 		eastIn <- ei
+		westIn <- wi
 	}()
 
 	// Run an iteration of the element logic
