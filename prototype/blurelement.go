@@ -75,32 +75,40 @@ func (el *BlurElement) Step() {
 // MakeBlurArray constructs a ComputeArray populated by BlurElements
 func MakeBlurArray(data [][]float64, widthEls, heightEls int) ComputeArray {
 	els := widthEls * heightEls
-	elRows := len(data) / heightEls
-	elCols := len(data[0]) / widthEls
 
-	// TODO TODO TODO TODO Extract the sub-array of data
-	// TODO TODO TODO TODO
+	if len(data)%heightEls != 0 {
+		panic("Imbalanced cell distribution")
+	}
+	elRowsInner := len(data) / heightEls
+	elRows := elRowsInner + 2
+	elColsInner := len(data[0]) / widthEls
+	elCols := elColsInner + 2
+
 	cseelems := make([]*BlurElement, els)
-	for e := 0; e < els; e++ {
-		data := make([][]float64, elRows)
-		scratch := make([][]float64, elRows)
-		for i := 0; i < elRows; i++ {
-			data[i] = make([]float64, elCols)
-			scratch[i] = make([]float64, elCols)
-			for j := 0; j < elCols; j++ {
-				data[i][j] = float64(e)
+	// TODO TODO Extract Data from data
+	for elx := 0; elx < widthEls; elx++ {
+		for ely := 0; ely < heightEls; ely++ {
+			e := elx*heightEls + ely
+			data := make([][]float64, elRows)
+			scratch := make([][]float64, elRows)
+			for i := 0; i < elRows; i++ {
+				data[i] = make([]float64, elCols)
+				scratch[i] = make([]float64, elCols)
+				for j := 0; j < elCols; j++ {
+					data[i][j] = float64(e)
+				}
 			}
+			cse := new(BlurElement)
+			cse.rows = elRows
+			cse.cols = elCols
+			cse.data = data
+			cse.scratch = scratch
+			cse.northOut = make(chan []float64)
+			cse.westOut = make(chan []float64)
+			cse.southOut = make(chan []float64)
+			cse.eastOut = make(chan []float64)
+			cseelems[e] = cse
 		}
-		cse := new(BlurElement)
-		cse.rows = elRows
-		cse.cols = elCols
-		cse.data = data
-		cse.scratch = scratch
-		cse.northOut = make(chan []float64)
-		cse.westOut = make(chan []float64)
-		cse.southOut = make(chan []float64)
-		cse.eastOut = make(chan []float64)
-		cseelems[e] = cse
 	}
 
 	// Weird naming convention, but it is correct

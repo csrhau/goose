@@ -183,6 +183,57 @@ func TestBlurElementSwapsCols(t *testing.T) {
 }
 
 func TestMakeBlurArrayPopulatesData(t *testing.T) {
+	globalData := [][]float64{
+		[]float64{1, 1, 2, 2},
+		[]float64{1, 1, 2, 2},
+		[]float64{3, 3, 4, 4},
+		[]float64{3, 3, 4, 4},
+	}
+
+	widthEls, heightEls := 2, 2
+	elRows := len(globalData)/heightEls + 2
+	elCols := len(globalData)/widthEls + 2
+	arr := MakeBlurArray(globalData, widthEls, heightEls)
+
+	for eli, el := range arr.Elements() {
+		if len(el.Data()) != elRows {
+			t.Error("Size Mismatch")
+		}
+		if len(el.Data()[0]) != elCols {
+			t.Error("Size Mismatch")
+		}
+
+		// Zero-valued boundary cells
+		for i := 0; i < elCols; i++ {
+			if el.Data()[0][i] != 0 {
+				t.Error("Nonzero top boundary detected:", el.Data()[0][i])
+			}
+			if el.Data()[elRows-1][i] != 0 {
+				t.Error("Nonzero bottom boundary detected:", el.Data()[elRows-1][i])
+			}
+		}
+		for i := 0; i < elRows; i++ {
+			if el.Data()[i][0] != 0 {
+				t.Error("Nonzero left boundary detected:", el.Data()[i][0])
+			}
+			if el.Data()[elCols-1][i] != 0 {
+				t.Error("Nonzero right boundary detected:", el.Data()[i][elCols-1])
+			}
+		}
+		// Inner values preserved:
+		for i := 1; i < elRows-1; i++ {
+			for j := 1; j < elCols-1; j++ {
+				obs := el.Data()[i][j]
+				exp := float64(eli + 1)
+				if obs != exp {
+					t.Error("Mismatched inner data! Got", obs, "wanted", exp)
+				}
+			}
+		}
+	}
+}
+
+func TestMakeBlurArrayPopulatesDataOld(t *testing.T) {
 	elRows := 5
 	elCols := 7
 
@@ -199,7 +250,7 @@ func TestMakeBlurArrayPopulatesData(t *testing.T) {
 
 			arr := MakeBlurArray(blurData, widthEls, heightEls)
 			for i, el := range arr.Elements() {
-				if len(el.Data()) != elRows || len(el.Data()[0]) != elCols {
+				if len(el.Data()) != elRows+2 || len(el.Data()[0]) != elCols+2 {
 					t.Error("Misshapen internal data detected:", len(el.Data()), "x", len(el.Data()[0]))
 				}
 				for _, r := range el.Data() {
