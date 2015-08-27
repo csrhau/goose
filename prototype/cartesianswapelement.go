@@ -67,7 +67,6 @@ func MakeCartesianSwapArray(widthEls, heightEls, elRows, elCols int) ComputeArra
 		cse.rows = elRows
 		cse.cols = elCols
 		cse.data = data
-		// TODO create all outbound connections
 		cse.northOut = make(chan []float64)
 		cse.westOut = make(chan []float64)
 		cse.southOut = make(chan []float64)
@@ -97,5 +96,3 @@ func MakeCartesianSwapArray(widthEls, heightEls, elRows, elCols int) ComputeArra
 	}
 	return ComputeArray{elements: elems}
 }
-
-// TODO needs total rewrite
