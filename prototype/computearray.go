@@ -25,6 +25,11 @@ func (arr *ComputeArray) Step() {
 	wg.Wait()
 }
 
+func (arr *ComputeArray) Data() [][]float64 {
+
+	return nil
+}
+
 // Run causes the array to step as dictaded by the clk clock channel
 func (arr *ComputeArray) Run(clk <-chan bool) {
 	for range clk {

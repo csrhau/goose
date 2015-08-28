@@ -48,3 +48,22 @@ func TestArrayClocking(t *testing.T) {
 	}
 	close(clk)
 }
+
+func TestArrayData(t *testing.T) {
+	ar := new(ComputeArray)
+	ar.elements = []ComputeElement{
+		new(CountingElement),
+		new(CountingElement),
+		new(CountingElement),
+		new(CountingElement),
+	}
+	clk := make(chan bool)
+	go ar.Run(clk)
+	for i := 1; i < 10; i++ {
+		if ar.Data() == nil {
+			t.Error("Nil data returned!")
+
+		}
+	}
+	close(clk)
+}
