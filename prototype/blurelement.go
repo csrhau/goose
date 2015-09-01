@@ -86,28 +86,37 @@ func MakeBlurArray(data [][]float64, widthEls, heightEls int) ComputeArray {
 
 	cseelems := make([]*BlurElement, els)
 	// TODO TODO Extract Data from data
-	for elx := 0; elx < widthEls; elx++ {
-		for ely := 0; ely < heightEls; ely++ {
-			e := elx*heightEls + ely
-			data := make([][]float64, elRows)
+
+	for ely := 0; ely < heightEls; ely++ {
+		for elx := 0; elx < widthEls; elx++ {
+			elID := ely*widthEls + elx
+			elData := make([][]float64, elRows)
 			scratch := make([][]float64, elRows)
 			for i := 0; i < elRows; i++ {
-				data[i] = make([]float64, elCols)
+				elData[i] = make([]float64, elCols)
 				scratch[i] = make([]float64, elCols)
-				for j := 0; j < elCols; j++ {
-					data[i][j] = float64(e)
+			}
+
+			for i := 1; i < elRows-1; i++ {
+				for j := 1; j < elCols-1; j++ {
+					yOff := ely * elRowsInner
+					xOff := elx * elColsInner
+					rowAccess := i + yOff - 1
+					colAccess := j + xOff - 1
+					elData[i][j] = data[rowAccess][colAccess]
 				}
 			}
+
 			cse := new(BlurElement)
 			cse.rows = elRows
 			cse.cols = elCols
-			cse.data = data
+			cse.data = elData
 			cse.scratch = scratch
 			cse.northOut = make(chan []float64)
 			cse.westOut = make(chan []float64)
 			cse.southOut = make(chan []float64)
 			cse.eastOut = make(chan []float64)
-			cseelems[e] = cse
+			cseelems[elID] = cse
 		}
 	}
 

@@ -233,50 +233,18 @@ func TestMakeBlurArrayPopulatesData(t *testing.T) {
 	}
 }
 
-func TestMakeBlurArrayPopulatesDataOld(t *testing.T) {
-	elRows := 5
-	elCols := 7
-
-	for widthEls := 1; widthEls < 8; widthEls++ {
-		for heightEls := 1; heightEls < 8; heightEls++ {
-
-			heightCells := heightEls * elRows
-			widthCells := widthEls * elCols
-
-			blurData := make([][]float64, heightCells)
-			for i := 0; i < elRows; i++ {
-				blurData[i] = make([]float64, widthCells)
-			}
-
-			arr := MakeBlurArray(blurData, widthEls, heightEls)
-			for i, el := range arr.Elements() {
-				if len(el.Data()) != elRows+2 || len(el.Data()[0]) != elCols+2 {
-					t.Error("Misshapen internal data detected:", len(el.Data()), "x", len(el.Data()[0]))
-				}
-				for _, r := range el.Data() {
-					for _, c := range r {
-						if c != float64(i) {
-							t.Error("Incorrect data in initialization, expected", float64(i), "got", c, "for el", i)
-						}
-					}
-				}
-			}
-		}
-	}
-}
-
 func TestMakeBlurArrayReturnsViableArray(t *testing.T) {
 	elRows := 5
 	elCols := 7
-	heightEls := 10
 	widthEls := 10
+	heightEls := 10
 
 	blurData := make([][]float64, elRows*heightEls)
-	for i := 0; i < elRows; i++ {
+	for i := 0; i < elRows*heightEls; i++ {
 		blurData[i] = make([]float64, elCols*widthEls)
 	}
 
-	arr := MakeBlurArray(blurData, 10, 10)
+	arr := MakeBlurArray(blurData, widthEls, heightEls)
 	arr.Step()
 }
 
