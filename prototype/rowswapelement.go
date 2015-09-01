@@ -7,6 +7,9 @@ type RowSwapElement struct {
 	southIn, southOut chan []float64
 }
 
+// Ensure we implement ComputeElement
+var _ ComputeElement = (*RowSwapElement)(nil)
+
 // Data returns the data stored by this element
 func (el *RowSwapElement) Data() [][]float64 {
 	return el.data

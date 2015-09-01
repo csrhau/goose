@@ -10,6 +10,9 @@ type BlurElement struct {
 	eastIn, eastOut   chan []float64
 }
 
+// Ensure we implement ComputeElement
+var _ ComputeElement = (*BlurElement)(nil)
+
 // Data returns the data stored by this element
 func (el *BlurElement) Data() [][]float64 {
 	return el.data

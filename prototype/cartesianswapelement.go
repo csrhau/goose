@@ -10,6 +10,9 @@ type CartesianSwapElement struct {
 	eastIn, eastOut   chan []float64
 }
 
+// Ensure we implement ComputeElement
+var _ ComputeElement = (*CartesianSwapElement)(nil)
+
 // Data returns the data stored by this element
 func (el *CartesianSwapElement) Data() [][]float64 {
 	return el.data

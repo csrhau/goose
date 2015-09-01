@@ -6,6 +6,9 @@ type CountingElement struct {
 	iterations int
 }
 
+// Ensure we implement ComputeElement
+var _ ComputeElement = (*CountingElement)(nil)
+
 // Data returns the data stored by this element
 func (el *CountingElement) Data() [][]float64 {
 	return el.data

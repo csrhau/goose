@@ -8,6 +8,9 @@ type ColSwapElement struct {
 	eastIn, eastOut chan []float64
 }
 
+// Ensure we implement ComputeElement
+var _ ComputeElement = (*ColSwapElement)(nil)
+
 // Data returns the data stored by this element
 func (el *ColSwapElement) Data() [][]float64 {
 	return el.data

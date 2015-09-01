@@ -7,6 +7,9 @@ type ComputeArray struct {
 	elements []ComputeElement
 }
 
+// Ensure we implement ComputeElement for nesting purposes
+var _ ComputeElement = (*ComputeArray)(nil)
+
 // Elements returns the ComputeElements which make up the array
 func (arr *ComputeArray) Elements() []ComputeElement {
 	return arr.elements
