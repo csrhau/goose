@@ -66,6 +66,7 @@ func TestColSwapElementSwapsCols(t *testing.T) {
 	}
 }
 
+/*
 func TestColSwapElementInArrayMakeConstruction(t *testing.T) {
 	const els = 3
 	const elRows = 4
@@ -121,6 +122,7 @@ func TestColSwapElementInArrayMakeConstruction(t *testing.T) {
 		}
 	}
 }
+*/
 
 func BenchmarkColSwap(b *testing.B) {
 	arr := MakeColSwapArray(25*25, 100, 100)

@@ -93,9 +93,9 @@ func MakeCartesianSwapArray(widthEls, heightEls, elRows, elCols int) ComputeArra
 		}
 	}
 
-	elems := make([]ComputeElement, els)
+	elems := make([][]ComputeElement, els)
 	for i, v := range cseelems {
-		elems[i] = v
+		elems[i/heightEls][i%widthEls] = v
 	}
 	return ComputeArray{elements: elems}
 }

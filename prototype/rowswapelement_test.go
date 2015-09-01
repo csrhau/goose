@@ -63,6 +63,7 @@ func TestRowSwapElementSwapsRows(t *testing.T) {
 	}
 }
 
+/*
 func TestRowSwapElementInArrayManualConstruction(t *testing.T) {
 	const els = 3
 	const elRows = 4
@@ -198,6 +199,8 @@ func TestRowSwapElementInArrayMakeConstruction(t *testing.T) {
 		}
 	}
 }
+
+*/
 
 func BenchmarkRowSwap(b *testing.B) {
 	arr := MakeRowSwapArray(25*25, 100, 100)

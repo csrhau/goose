@@ -34,7 +34,7 @@ func (el *RowSwapElement) Step() {
 
 // MakeRowSwapArray constructs a ComputeArray populated by RowSwapElements
 func MakeRowSwapArray(els, elRows, elCols int) *ComputeArray {
-	elems := make([]ComputeElement, els)
+	elems := make([][]ComputeElement, els)
 	topDown, topUp := make(chan []float64), make(chan []float64)
 	lastUp, lastDown := topUp, topDown
 	for i := 0; i < els; i++ {
@@ -54,7 +54,7 @@ func MakeRowSwapArray(els, elRows, elCols int) *ComputeArray {
 			rse.southIn, rse.southOut = topUp, topDown
 		}
 		lastDown, lastUp = rse.southOut, rse.southIn
-		elems[i] = rse
+		elems[i] = []ComputeElement{rse}
 	}
 	return &ComputeArray{elements: elems}
 }
