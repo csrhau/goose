@@ -50,6 +50,7 @@ func TestArrayClocking(t *testing.T) {
 }
 
 func TestArrayData(t *testing.T) {
+	t.Skip()
 	ar := new(ComputeArray)
 	ar.elements = []ComputeElement{
 		new(CountingElement),
