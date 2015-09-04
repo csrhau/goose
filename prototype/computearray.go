@@ -11,6 +11,9 @@ type ComputeArray struct {
 	elsVertical, elsHorizontal int // The number of row/cols of computeelements
 }
 
+// Ensure a ComputeArray is also a ComputeElement to support nesting
+var _ ComputeElement = (*ComputeArray)(nil)
+
 func NewComputeArray(elements []ComputeElement, elsVertical, elsHorizontal int) *ComputeArray {
 	if len(elements) != elsVertical*elsHorizontal {
 		panic(fmt.Sprintf("Unable to create %dx%d array from %d elements", elsHorizontal, elsVertical, len(elements)))
@@ -19,8 +22,15 @@ func NewComputeArray(elements []ComputeElement, elsVertical, elsHorizontal int) 
 }
 
 // Elements returns the ComputeElements which make up the array
-func (arr *ComputeArray) Elements() []ComputeElement {
+func (arr ComputeArray) Elements() []ComputeElement {
 	return arr.elements
+}
+
+// Data returns the amalgamated data held by the constituent compute elements
+func (arr ComputeArray) Data() [][]float64 {
+	var data [][]float64
+	data = nil
+	return data
 }
 
 // Step causes the array to advance by single stepping each ComputeElement
@@ -36,7 +46,7 @@ func (arr *ComputeArray) Step() {
 	wg.Wait()
 }
 
-// Layout
+// Layout describes the number and layout of elements in this compute array
 func (arr ComputeArray) Layout() (int, int) {
 	return arr.elsVertical, arr.elsHorizontal
 }
