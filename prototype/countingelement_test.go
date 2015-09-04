@@ -33,3 +33,24 @@ func TestCountingElementData(t *testing.T) {
 		}
 	}
 }
+
+func TestCountingElementInArray(t *testing.T) {
+	el := new(CountingElement)
+	el.data = [][]float64{
+		make([]float64, 3),
+		make([]float64, 3),
+		make([]float64, 3),
+	}
+	ar := NewComputeArray([]ComputeElement{el}, 1, 1)
+	for i := 1; i < 10; i++ {
+		ar.Step()
+		el := ar.Elements()[0]
+		for _, r := range el.Data() {
+			for _, v := range r {
+				if v != float64(i) {
+					t.Error("Counting element data error")
+				}
+			}
+		}
+	}
+}
