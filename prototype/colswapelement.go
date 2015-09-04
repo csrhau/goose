@@ -13,6 +13,11 @@ func (el *ColSwapElement) Data() [][]float64 {
 	return el.data
 }
 
+// Shape returns the (rows, cols) covered by our simulation domain
+func (el *ColSwapElement) Shape() (int, int) {
+	return len(el.Data()), len(el.Data()[0])
+}
+
 // Swap causes this element to exchange data with its neighbours
 func (el *ColSwapElement) Swap() {
 	// Send
@@ -67,5 +72,5 @@ func MakeColSwapArray(els, elRows, elCols int) *ComputeArray {
 		lastRight, lastLeft = cse.eastOut, cse.eastIn
 		elems[i] = cse
 	}
-	return &ComputeArray{elements: elems}
+	return NewComputeArray(elems, 1, els)
 }

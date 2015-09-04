@@ -103,9 +103,9 @@ func TestCartesianSwapElementSwapsCols(t *testing.T) {
 func TestMakeCartesianSwapArrayPopulatesData(t *testing.T) {
 	elRows := 5
 	elCols := 7
-	for widthEls := 1; widthEls < 8; widthEls++ {
-		for heightEls := 1; heightEls < 8; heightEls++ {
-			arr := MakeCartesianSwapArray(widthEls, heightEls, elRows, elCols)
+	for elsHorizontal := 1; elsHorizontal < 8; elsHorizontal++ {
+		for elsVertical := 1; elsVertical < 8; elsVertical++ {
+			arr := MakeCartesianSwapArray(elsVertical, elsHorizontal, elRows, elCols)
 			for i, el := range arr.Elements() {
 				if len(el.Data()) != elRows || len(el.Data()[0]) != elCols {
 					t.Error("Misshapen internal data detected:", len(el.Data()), "x", len(el.Data()[0]))
@@ -184,6 +184,68 @@ func TestCartesianSwapArraySwapsSuccessfully(t *testing.T) {
 func TestMakeCartesianSwapArrayReturnsViableArray(t *testing.T) {
 	arr := MakeCartesianSwapArray(3, 5, 10, 10)
 	arr.Step()
+}
+
+func TestCartesianSwapElementShapeWorksAsExpected(t *testing.T) {
+	var arr *ComputeArray
+	for elsVertical := 1; elsVertical < 4; elsVertical++ {
+		for elsHorizontal := 1; elsHorizontal < 4; elsHorizontal++ {
+			for elRows := 1; elRows < 10; elRows++ {
+				for elCols := 1; elCols < 10; elCols++ {
+					arr = MakeCartesianSwapArray(elsVertical, elsHorizontal, elRows, elCols)
+					for _, el := range arr.Elements() {
+						er, ec := el.Shape()
+						if er != elRows {
+							t.Error("Misshapen element rows, expected", elRows, "got", er)
+						}
+						if ec != elCols {
+							t.Error("Misshapen element cols, expected", elCols, "got", ec)
+						}
+						dat := el.Data()
+
+						if len(dat) != er {
+							t.Error("Element reporting inconsistent number of rows!")
+						}
+						if len(dat[0]) != ec {
+							t.Error("Element reporting inconsistent number of cols!")
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+func TestArrayLayoutWorksAsExpected(t *testing.T) {
+	var arr *ComputeArray
+	for elsVertical := 1; elsVertical < 10; elsVertical++ {
+		for elsHorizontal := 1; elsHorizontal < 10; elsHorizontal++ {
+			arr = MakeCartesianSwapArray(elsVertical, elsHorizontal, 10, 10)
+			vEls, hEls := arr.Layout()
+			if vEls != elsVertical {
+				t.Error("Array shape mismatch, expected", elsVertical, "vEls, got", vEls)
+			}
+			if hEls != elsHorizontal {
+				t.Error("Array shape mismatch, expected", elsHorizontal, "hEls, got", hEls)
+			}
+		}
+	}
+}
+
+func TestArrayShapeWorksAsExpected(t *testing.T) {
+	var arr *ComputeArray
+	for elsVertical := 1; elsVertical < 10; elsVertical++ {
+		for elsHorizontal := 1; elsHorizontal < 10; elsHorizontal++ {
+			arr = MakeCartesianSwapArray(elsVertical, elsHorizontal, 10, 10)
+			rows, cols := arr.Shape()
+			if rows != elsVertical*10 {
+				t.Error("Array shape mismatch, expected", elsVertical*10, "rows, got", rows)
+			}
+			if cols != elsHorizontal*10 {
+				t.Error("Array shape mismatch, expected", elsHorizontal*10, "cols, got", cols)
+			}
+		}
+	}
 }
 
 func BenchmarkCartesianSwap(b *testing.B) {
