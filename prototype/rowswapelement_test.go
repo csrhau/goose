@@ -94,8 +94,7 @@ func TestRowSwapElementInArrayManualConstruction(t *testing.T) {
 		}
 		elems[i] = &elem
 	}
-	arr := new(ComputeArray)
-	arr.elements = elems
+	arr := NewComputeArray(elems, els, 1)
 
 	// Check Initialization
 	for i, e := range arr.elements {

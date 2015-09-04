@@ -103,9 +103,9 @@ func TestCartesianSwapElementSwapsCols(t *testing.T) {
 func TestMakeCartesianSwapArrayPopulatesData(t *testing.T) {
 	elRows := 5
 	elCols := 7
-	for widthEls := 1; widthEls < 8; widthEls++ {
-		for heightEls := 1; heightEls < 8; heightEls++ {
-			arr := MakeCartesianSwapArray(widthEls, heightEls, elRows, elCols)
+	for elsHorizontal := 1; elsHorizontal < 8; elsHorizontal++ {
+		for elsVertical := 1; elsVertical < 8; elsVertical++ {
+			arr := MakeCartesianSwapArray(elsVertical, elsHorizontal, elRows, elCols)
 			for i, el := range arr.Elements() {
 				if len(el.Data()) != elRows || len(el.Data()[0]) != elCols {
 					t.Error("Misshapen internal data detected:", len(el.Data()), "x", len(el.Data()[0]))

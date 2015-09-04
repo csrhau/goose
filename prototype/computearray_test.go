@@ -3,13 +3,13 @@ package goose
 import "testing"
 
 func TestArrayIterations(t *testing.T) {
-	ar := new(ComputeArray)
-	ar.elements = []ComputeElement{
+	els := []ComputeElement{
 		new(CountingElement),
 		new(CountingElement),
 		new(CountingElement),
 		new(CountingElement),
 	}
+	ar := NewComputeArray(els, 2, 2)
 	for i := 1; i < 10; i++ {
 		ar.Step()
 		for _, el := range ar.Elements() {
@@ -25,13 +25,13 @@ func TestArrayIterations(t *testing.T) {
 }
 
 func TestArrayClocking(t *testing.T) {
-	ar := new(ComputeArray)
-	ar.elements = []ComputeElement{
+	els := []ComputeElement{
 		new(CountingElement),
 		new(CountingElement),
 		new(CountingElement),
 		new(CountingElement),
 	}
+	ar := NewComputeArray(els, 2, 2)
 	clk := make(chan bool)
 	go ar.Run(clk)
 	for i := 1; i < 10; i++ {

@@ -67,5 +67,5 @@ func MakeColSwapArray(els, elRows, elCols int) *ComputeArray {
 		lastRight, lastLeft = cse.eastOut, cse.eastIn
 		elems[i] = cse
 	}
-	return &ComputeArray{elements: elems}
+	return NewComputeArray(elems, 1, els)
 }

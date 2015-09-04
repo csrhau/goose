@@ -52,8 +52,8 @@ func (el *CartesianSwapElement) Step() {
 }
 
 // MakeCartesianSwapArray constructs a ComputeArray populated by CartesianSwapElements
-func MakeCartesianSwapArray(widthEls, heightEls, elRows, elCols int) ComputeArray {
-	els := widthEls * heightEls
+func MakeCartesianSwapArray(elsVertical, elsHorizontal, elRows, elCols int) *ComputeArray {
+	els := elsVertical * elsHorizontal
 	cseelems := make([]*CartesianSwapElement, els)
 	for e := 0; e < els; e++ {
 		data := make([][]float64, elRows)
@@ -75,18 +75,18 @@ func MakeCartesianSwapArray(widthEls, heightEls, elRows, elCols int) ComputeArra
 	}
 
 	// Weird naming convention, but it is correct
-	for row := 0; row < heightEls; row++ {
-		for col := 0; col < widthEls; col++ {
+	for row := 0; row < elsVertical; row++ {
+		for col := 0; col < elsHorizontal; col++ {
 			// Find neighbours, dealing with wrap-around
-			nextRow := (row + 1) % heightEls
-			prevRow := (row - 1 + heightEls) % heightEls
-			nextCol := (col + 1) % widthEls
-			prevCol := (col - 1 + widthEls) % widthEls
-			cse := cseelems[widthEls*row+col]
-			cse.northIn = cseelems[widthEls*prevRow+col].southOut
-			cse.westIn = cseelems[widthEls*row+prevCol].eastOut
-			cse.southIn = cseelems[widthEls*nextRow+col].northOut
-			cse.eastIn = cseelems[widthEls*row+nextCol].westOut
+			nextRow := (row + 1) % elsVertical
+			prevRow := (row - 1 + elsVertical) % elsVertical
+			nextCol := (col + 1) % elsHorizontal
+			prevCol := (col - 1 + elsHorizontal) % elsHorizontal
+			cse := cseelems[elsHorizontal*row+col]
+			cse.northIn = cseelems[elsHorizontal*prevRow+col].southOut
+			cse.westIn = cseelems[elsHorizontal*row+prevCol].eastOut
+			cse.southIn = cseelems[elsHorizontal*nextRow+col].northOut
+			cse.eastIn = cseelems[elsHorizontal*row+nextCol].westOut
 		}
 	}
 
@@ -94,5 +94,5 @@ func MakeCartesianSwapArray(widthEls, heightEls, elRows, elCols int) ComputeArra
 	for i, v := range cseelems {
 		elems[i] = v
 	}
-	return ComputeArray{elements: elems}
+	return NewComputeArray(elems, elsVertical, elsHorizontal)
 }

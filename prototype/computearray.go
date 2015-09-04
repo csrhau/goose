@@ -1,10 +1,21 @@
 package goose
 
-import "sync"
+import (
+	"fmt"
+	"sync"
+)
 
 // ComputeArray represents an array based parallel computing architecture
 type ComputeArray struct {
-	elements []ComputeElement
+	elements                   []ComputeElement
+	elsVertical, elsHorizontal int // The number of row/cols of computeelements
+}
+
+func NewComputeArray(elements []ComputeElement, elsVertical, elsHorizontal int) *ComputeArray {
+	if len(elements) != elsVertical*elsHorizontal {
+		panic(fmt.Sprintf("Unable to create %dx%d array from %d elements", elsHorizontal, elsVertical, len(elements)))
+	}
+	return &ComputeArray{elements, elsVertical, elsHorizontal}
 }
 
 // Elements returns the ComputeElements which make up the array
@@ -23,6 +34,11 @@ func (arr *ComputeArray) Step() {
 		}(el)
 	}
 	wg.Wait()
+}
+
+// Layout
+func (arr ComputeArray) Layout() (int, int) {
+	return arr.elsVertical, arr.elsHorizontal
 }
 
 // Run causes the array to step as dictaded by the clk clock channel

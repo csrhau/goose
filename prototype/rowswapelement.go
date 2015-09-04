@@ -53,5 +53,5 @@ func MakeRowSwapArray(els, elRows, elCols int) *ComputeArray {
 		lastDown, lastUp = rse.southOut, rse.southIn
 		elems[i] = rse
 	}
-	return &ComputeArray{elements: elems}
+	return NewComputeArray(elems, els, 1)
 }
