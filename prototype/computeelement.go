@@ -6,7 +6,3 @@ type ComputeElement interface {
 	Shape() (int, int)
 	Step()
 }
-
-func (el *ComputeElement) Shape() (int, int) {
-	return len(el.Data()), len(el.Data()[0])
-}

@@ -21,16 +21,19 @@ func NewComputeArray(elements []ComputeElement, elsVertical, elsHorizontal int) 
 	return &ComputeArray{elements, elsVertical, elsHorizontal}
 }
 
+// Data returns the amalgamated data held by the constituent compute elements
+func (arr *ComputeArray) Data() [][]float64 {
+	return [][]float64{[]float64{0}}
+}
+
+// Shape returns the (rows, cols) covered by our simulation domain
+func (arr *ComputeArray) Shape() (int, int) {
+	return len(arr.Data()), len(arr.Data()[0])
+}
+
 // Elements returns the ComputeElements which make up the array
 func (arr ComputeArray) Elements() []ComputeElement {
 	return arr.elements
-}
-
-// Data returns the amalgamated data held by the constituent compute elements
-func (arr ComputeArray) Data() [][]float64 {
-	var data [][]float64
-	data = nil
-	return data
 }
 
 // Step causes the array to advance by single stepping each ComputeElement

@@ -11,6 +11,11 @@ func (el *CountingElement) Data() [][]float64 {
 	return el.data
 }
 
+// Shape returns the (rows, cols) covered by our simulation domain
+func (el *CountingElement) Shape() (int, int) {
+	return len(el.Data()), len(el.Data()[0])
+}
+
 // Step causes this element to advance by one step, setting each cell of this
 // element's data to the step count
 func (el *CountingElement) Step() {
