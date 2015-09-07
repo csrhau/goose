@@ -54,3 +54,45 @@ func TestCountingElementInArray(t *testing.T) {
 		}
 	}
 }
+
+func TestMakeCountingArrayPopulatesData(t *testing.T) {
+	elRows := 5
+	elCols := 7
+	for elsHorizontal := 1; elsHorizontal < 8; elsHorizontal++ {
+		for elsVertical := 1; elsVertical < 8; elsVertical++ {
+			arr := MakeCountingArray(elsVertical, elsHorizontal, elRows, elCols)
+			for i, el := range arr.Elements() {
+				if len(el.Data()) != elRows || len(el.Data()[0]) != elCols {
+					t.Error("Misshapen internal data detected:", len(el.Data()), "x", len(el.Data()[0]))
+				}
+				for _, r := range el.Data() {
+					for _, c := range r {
+						if c != float64(i) {
+							t.Error("Incorrect data in initialization, expected", float64(i), "got", c, "for el", i)
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+func TestMakeCountingArrayProducesViableArray(t *testing.T) {
+	elRows := 71
+	elCols := 2
+	elsHorizontal := 13
+	elsVertical := 15
+	arr := MakeCountingArray(elsVertical, elsHorizontal, elRows, elCols)
+	for step := 0; step < 10; step++ {
+		for i, el := range arr.Elements() {
+			for _, r := range el.Data() {
+				for _, c := range r {
+					if c != float64(i+step) {
+						t.Error("Incorrect data in step", step, "expected", float64(i), "got", c, "for el", i)
+					}
+				}
+			}
+		}
+		arr.Step()
+	}
+}

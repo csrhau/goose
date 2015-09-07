@@ -122,6 +122,34 @@ func TestColSwapElementInArrayMakeConstruction(t *testing.T) {
 	}
 }
 
+func TestColSwapElementShapeWorksAsExpected(t *testing.T) {
+	var arr *ComputeArray
+	for elsHorizontal := 1; elsHorizontal < 4; elsHorizontal++ {
+		for elRows := 1; elRows < 10; elRows++ {
+			for elCols := 1; elCols < 10; elCols++ {
+				arr = MakeColSwapArray(elsHorizontal, elRows, elCols)
+				for _, el := range arr.Elements() {
+					er, ec := el.Shape()
+					if er != elRows {
+						t.Error("Misshapen element rows, expected", elRows, "got", er)
+					}
+					if ec != elCols {
+						t.Error("Misshapen element cols, expected", elCols, "got", ec)
+					}
+					dat := el.Data()
+
+					if len(dat) != er {
+						t.Error("Element reporting inconsistent number of rows!")
+					}
+					if len(dat[0]) != ec {
+						t.Error("Element reporting inconsistent number of cols!")
+					}
+				}
+			}
+		}
+	}
+}
+
 func BenchmarkColSwap(b *testing.B) {
 	arr := MakeColSwapArray(25*25, 100, 100)
 	for i := 0; i < b.N; i++ {
