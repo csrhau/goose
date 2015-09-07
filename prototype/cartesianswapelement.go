@@ -16,7 +16,7 @@ func (el *CartesianSwapElement) Data() [][]float64 {
 }
 
 // Shape returns the (rows, cols) covered by our simulation domain
-func (el *CartesianSwapElement) Shape() (int, int) {
+func (el CartesianSwapElement) Shape() (int, int) {
 	return el.rows, el.cols
 }
 

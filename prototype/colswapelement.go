@@ -14,7 +14,7 @@ func (el *ColSwapElement) Data() [][]float64 {
 }
 
 // Shape returns the (rows, cols) covered by our simulation domain
-func (el *ColSwapElement) Shape() (int, int) {
+func (el ColSwapElement) Shape() (int, int) {
 	return len(el.Data()), len(el.Data()[0])
 }
 

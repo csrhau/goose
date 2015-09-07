@@ -12,7 +12,7 @@ func (el *CountingElement) Data() [][]float64 {
 }
 
 // Shape returns the (rows, cols) covered by our simulation domain
-func (el *CountingElement) Shape() (int, int) {
+func (el CountingElement) Shape() (int, int) {
 	return len(el.Data()), len(el.Data()[0])
 }
 
